@@ -1,2 +1,2 @@
 # yihctl
-A sample command tool line that I used.
+A sample command tool line that I using.
