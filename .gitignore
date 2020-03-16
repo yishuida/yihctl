@@ -150,6 +150,6 @@ $RECYCLE.BIN/
 .idea/modules.xml
 .idea/vcs.xml
 .idea/yihctl.iml
-cmd/c7n/
+cmd/yihctl/c7n/
 docs/
 pkg/
