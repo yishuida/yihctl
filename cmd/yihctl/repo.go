@@ -5,31 +5,22 @@ import (
 	"io"
 )
 
-var repoDesc = ``
-
-type repoOptions struct {
-	homeDir string
-	sync    bool
-}
+const repoDesc = `
+maintenance used git repository, so we can init,sync,backup then by the easy way.
+default repository config in $HOME/.yih/git-repo.yaml. you can edit this file when you
+want to change repositories.
+`
 
 func newRepoCmd(out io.Writer) *cobra.Command {
-	r := &repoOptions{}
 
 	cmd := &cobra.Command{
-		Use:   "repo",
-		Short: "",
+		Use:   "repo [keyword]",
+		Short: "manager git repository in home dir",
 		Long:  repoDesc,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return r.run(out)
-		},
 	}
-	cmd.Flags().StringVarP(&r.homeDir, "home", "d", "", "repo home path")
-	cmd.Flags().BoolVarP(&r.sync, "sync", "s", false, "Sync default repo")
+
+	cmd.AddCommand(newRepoSyncCmd(out))
+	cmd.AddCommand(newRepoInitCmd(out))
+
 	return cmd
-}
-
-func (r *repoOptions) run(out io.Writer) error {
-	CmdLogger.Printf("repo %s\n", r.homeDir)
-
-	return nil
 }

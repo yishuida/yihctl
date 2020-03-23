@@ -3,6 +3,7 @@ package main // import "github.com/yishuida/yihctl/cmd/yihctl"
 import (
 	log "github.com/sirupsen/logrus"
 	"github.com/yishuida/yihctl/pkg/cli"
+	myLog "github.com/yishuida/yihctl/pkg/log"
 	"os"
 )
 
@@ -12,7 +13,7 @@ var (
 )
 
 func init() {
-	CmdLogger.WithFields(log.Fields{
+	CmdLogger = myLog.StdLog.WithFields(log.Fields{
 		"pkg": "cmd",
 	})
 }
@@ -22,6 +23,7 @@ func debug() {
 }
 
 func main() {
+	CmdLogger.Info("Starting...")
 	cmd := newRootCmd(os.Stdout, os.Args[1:])
 
 	if err := cmd.Execute(); err != nil {
