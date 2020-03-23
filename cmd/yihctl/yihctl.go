@@ -1,32 +1,31 @@
 package main // import "github.com/yishuida/yihctl/cmd/yihctl"
 
 import (
-	"fmt"
+	log "github.com/sirupsen/logrus"
 	"github.com/yishuida/yihctl/pkg/cli"
-	"log"
 	"os"
 )
 
 var (
-	settings = cli.New()
+	settings  = cli.New()
+	CmdLogger = &log.Entry{}
 )
 
 func init() {
-	log.SetFlags(log.Lshortfile)
+	CmdLogger.WithFields(log.Fields{
+		"pkg": "cmd",
+	})
 }
 
-func debug(format string, v ...interface{}) {
-	if settings.Debug {
-		format := fmt.Sprintf("[debug] %s\n", format)
-		_ = log.Output(2, fmt.Sprintf(format, v...))
-	}
+func debug() {
+	CmdLogger.Level = log.DebugLevel
 }
 
 func main() {
 	cmd := newRootCmd(os.Stdout, os.Args[1:])
 
 	if err := cmd.Execute(); err != nil {
-		debug("%+v", err)
+		debug()
 		os.Exit(1)
 	}
 }
