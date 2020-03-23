@@ -150,9 +150,7 @@ $RECYCLE.BIN/
 .idea/modules.xml
 .idea/vcs.xml
 .idea/yihctl.iml
-cmd/yihctl/c7n/
-docs/
-pkg/
+
 ### macOS template
 # General
 .DS_Store
