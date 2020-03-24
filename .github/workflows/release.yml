@@ -4,6 +4,7 @@ on:
     tags:
       - "v*"
 
+
 jobs:
   release:
     name: Upload Release Asset
@@ -77,9 +78,13 @@ jobs:
       - name: Upload Release darwin amd64 sha256sum
         uses: actions/upload-release-asset@v1
         env:
+<<<<<<< HEAD
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./_dist/yihctl-${{ github.ref }}-windows-amd64.zip.sha256sum
           asset_name: yihctl-${{ github.ref }}-windows-amd64.zip.sha256sum
           asset_content_type: application/zip
+=======
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+>>>>>>> 32a1415eeb7060ec1753d44617fbcf95f4524f14
