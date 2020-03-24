@@ -35,7 +35,7 @@ BINARY_VERSION ?= ${GIT_TAG}
 
 # Only set Version if building a tag or VERSION is set
 ifneq ($(BINARY_VERSION),)
-	LDFLAGS += -X helm.sh/helm/v3/internal/version.version=${BINARY_VERSION}
+	LDFLAGS += -X github.com/yishuida/yihctl/internal/version.version=${BINARY_VERSION}
 endif
 
 VERSION_METADATA = unreleased
@@ -44,9 +44,9 @@ ifneq ($(GIT_TAG),)
 	VERSION_METADATA =
 endif
 
-LDFLAGS += -X helm.sh/helm/v3/internal/version.metadata=${VERSION_METADATA}
-LDFLAGS += -X helm.sh/helm/v3/internal/version.gitCommit=${GIT_COMMIT}
-LDFLAGS += -X helm.sh/helm/v3/internal/version.gitTreeState=${GIT_DIRTY}
+LDFLAGS += -X github.com/yishuida/yihctl/internal/version.metadata=${VERSION_METADATA}
+LDFLAGS += -X github.com/yishuida/yihctl/internal/version.gitCommit=${GIT_COMMIT}
+LDFLAGS += -X github.com/yishuida/yihctl/internal/version.gitTreeState=${GIT_DIRTY}
 
 .PHONY: all
 all: build
@@ -115,8 +115,8 @@ dist:
 		cd _dist && \
 		$(DIST_DIRS) cp ../LICENSE {} \; && \
 		$(DIST_DIRS) cp ../README.md {} \; && \
-		$(DIST_DIRS) tar -zcf helm-${VERSION}-{}.tar.gz {} \; && \
-		$(DIST_DIRS) zip -r helm-${VERSION}-{}.zip {} \; \
+		$(DIST_DIRS) tar -zcf yihctl-${VERSION}-{}.tar.gz {} \; && \
+		$(DIST_DIRS) zip -r yihctl-${VERSION}-{}.zip {} \; \
 	)
 
 # The contents of the .sha256sum file are compatible with tools like
@@ -133,6 +133,8 @@ checksum:
 		shasum -a 256 "$${f}" | awk '{print $$1}' > "$${f}.sha256" ; \
 	done
 
+.PHONY: release
+release: build-cross dist checksum
 # ------------------------------------------------------------------------------
 
 .PHONY: clean
@@ -151,8 +153,6 @@ release-notes:
 		fi
 
 		@./scripts/release-notes.sh ${PREVIOUS_RELEASE} ${VERSION}
-
-
 
 .PHONY: info
 info:
