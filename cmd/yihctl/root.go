@@ -4,7 +4,7 @@ import (
 	"io"
 )
 
-var cmdLongDescribe = `A lnger description that spans multiple lines and likely contains
+const rootDesc = `A lnger description that spans multiple lines and likely contains
 examples and usage of using your application. For example:
 
 Cobra is a CLI library for Go that empowers applications.
@@ -15,7 +15,7 @@ func newRootCmd(out io.Writer, args []string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "yihctl",
 		Short: "A sample command tool line",
-		Long:  cmdLongDescribe,
+		Long:  rootDesc,
 		Run: func(cmd *cobra.Command, args []string) {
 			_ = cmd.Help()
 		},
@@ -38,8 +38,4 @@ func newRootCmd(out io.Writer, args []string) *cobra.Command {
 	)
 
 	return cmd
-}
-
-func init() {
-
 }

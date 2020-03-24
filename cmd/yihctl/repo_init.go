@@ -10,11 +10,9 @@ import (
 	"os"
 )
 
-var (
-	repoHomePath = ""
-)
-
 const repoInitDesc = `
+Init config file in $HOME/.yih/git-repo.yaml, this default config will clone repository in
+helm, kubernetes, choerodon, yishuida organization,
 `
 
 type repoInitOptions struct {
@@ -35,7 +33,7 @@ func newRepoInitCmd(out io.Writer) *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVar(&r.gitRepo, "git-repo", config.Path(".yih")+"/git-repo.yaml", "list manager git repository")
+	f.StringVar(&r.gitRepo, "git-repo", config.Path(".yih")+string(os.PathSeparator)+"git-repo.yaml", "list manager git repository")
 
 	return cmd
 }
@@ -70,20 +68,30 @@ func loadConfig(path string) *config.GitRepo {
 	return &gitRepo
 }
 
+// TODO move to utils package
 func cloneRepo(gitRepos *config.GitRepo) {
 	for _, remote := range gitRepos.Remotes {
 		for _, org := range remote.Organizations {
 			for _, repo := range org.Repos {
 				url := remote.Domain + string(os.PathSeparator) + org.Name + string(os.PathSeparator) + repo.Name + ".git"
 				destPath := config.HomePath() + string(os.PathSeparator) + org.Dir + string(os.PathSeparator) + repo.Name
-				config.Path(destPath)
-				CmdLogger.WithFields(log.Fields{
-					"repo": url,
-					"path": destPath,
-				}).Info("cloning repository")
-				git.PlainClone(destPath, false, &git.CloneOptions{
-					URL: url,
-				})
+
+				if _, err := os.Stat(destPath); os.IsNotExist(err) {
+					config.Path(destPath)
+					CmdLogger.WithFields(log.Fields{
+						"repo": url,
+						"path": destPath,
+					}).Info("cloning repository")
+					_, _ = git.PlainClone(destPath, false, &git.CloneOptions{
+						URL:      url,
+						Progress: os.Stdout,
+					})
+				} else {
+					CmdLogger.WithFields(log.Fields{
+						"repo": url,
+						"path": destPath,
+					}).Info("repository is existing!")
+				}
 			}
 		}
 	}
