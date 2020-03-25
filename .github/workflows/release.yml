@@ -38,7 +38,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release darwin amd64
+      - name: Upload Release darwin amd64 zip
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -48,7 +48,7 @@ jobs:
           asset_path: ./_dist/yihctl-${{ env.SOURCE_TAG }}-darwin-amd64.zip
           asset_name: yihctl-${{ env.SOURCE_TAG }}-darwin-amd64.zip
           asset_content_type: application/zip
-      - name: Upload Release darwin amd64 sha256sum
+      - name: Upload Release darwin amd64 zip.sha256sum
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -58,8 +58,28 @@ jobs:
           asset_path: ./_dist/yihctl-${{ env.SOURCE_TAG }}-darwin-amd64.zip.sha256sum
           asset_name: yihctl-${{ env.SOURCE_TAG }}-darwin-amd64.zip.sha256sum
           asset_content_type: text/plain
+      - name: Upload Release darwin amd64 tar.gz
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./_dist/yihctl-${{ env.SOURCE_TAG }}-darwin-amd64.tar.gz
+          asset_name: yihctl-${{ env.SOURCE_TAG }}-darwin-amd64.tar.gz
+          asset_content_type: application/gzip
+      - name: Upload Release darwin amd64 tar.gz.sha256sum
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./_dist/yihctl-${{ env.SOURCE_TAG }}-darwin-amd64.tar.gz.sha256sum
+          asset_name: yihctl-${{ env.SOURCE_TAG }}-darwin-amd64.tar.gz.sha256sum
+          asset_content_type: text/plain
 
-      - name: Upload Release linux amd64
+      - name: Upload Release linux amd64 zip
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -69,7 +89,7 @@ jobs:
           asset_path: ./_dist/yihctl-${{ env.SOURCE_TAG }}-linux-amd64.zip
           asset_name: yihctl-${{ env.SOURCE_TAG }}-linux-amd64.zip
           asset_content_type: application/zip
-      - name: Upload Release linux amd64 sha256sum
+      - name: Upload Release linux amd64 zip.sha256sum
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -79,8 +99,28 @@ jobs:
           asset_path: ./_dist/yihctl-${{ env.SOURCE_TAG }}-linux-amd64.zip.sha256sum
           asset_name: yihctl-${{ env.SOURCE_TAG }}-linux-amd64.zip.sha256sum
           asset_content_type: text/plain
+      - name: Upload Release linux amd64 tar.gz
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./_dist/yihctl-${{ env.SOURCE_TAG }}-linux-amd64.tar.gz
+          asset_name: yihctl-${{ env.SOURCE_TAG }}-linux-amd64.tar.gz
+          asset_content_type: application/gzip
+      - name: Upload Release linux amd64 tar.gz.sha256sum
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./_dist/yihctl-${{ env.SOURCE_TAG }}-linux-amd64.tar.gz.sha256sum
+          asset_name: yihctl-${{ env.SOURCE_TAG }}-linux-amd64.tar.gz.sha256sum
+          asset_content_type: text/plain
 
-      - name: Upload Release windows amd64
+      - name: Upload Release windows amd64 zip
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -90,7 +130,7 @@ jobs:
           asset_path: ./_dist/yihctl-${{ env.SOURCE_TAG }}-windows-amd64.zip
           asset_name: yihctl-${{ env.SOURCE_TAG }}-windows-amd64.zip
           asset_content_type: application/zip
-      - name: Upload Release windowss amd64 sha256sum
+      - name: Upload Release windows amd64 zip.sha256sum
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -100,5 +140,23 @@ jobs:
           asset_path: ./_dist/yihctl-${{ env.SOURCE_TAG }}-windows-amd64.zip.sha256sum
           asset_name: yihctl-${{ env.SOURCE_TAG }}-windows-amd64.zip.sha256sum
           asset_content_type: text/plain
-
-
+      - name: Upload Release windows amd64 tar.gz
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./_dist/yihctl-${{ env.SOURCE_TAG }}-windows-amd64.tar.gz
+          asset_name: yihctl-${{ env.SOURCE_TAG }}-windows-amd64.tar.gz
+          asset_content_type: application/gzip
+      - name: Upload Release windows amd64 tar.gz.sha256sum
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./_dist/yihctl-${{ env.SOURCE_TAG }}-windows-amd64.tar.gz.sha256sum
+          asset_name: yihctl-${{ env.SOURCE_TAG }}-windows-amd64.tar.gz.sha256sum
+          asset_content_type: text/plain
