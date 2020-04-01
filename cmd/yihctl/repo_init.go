@@ -5,6 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/yishuida/yihctl/pkg/config"
+	"github.com/yishuida/yihctl/pkg/util"
 	"gopkg.in/src-d/go-git.v4"
 	"io"
 	"os"
@@ -33,7 +34,7 @@ func newRepoInitCmd(out io.Writer) *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVar(&r.gitRepo, "git-repo", config.Path(".yih")+string(os.PathSeparator)+"git-repo.yaml", "list manager git repository")
+	f.StringVar(&r.gitRepo, "git-repo", util.Path(util.HomePath(), ".yih")+string(os.PathSeparator)+"git-repo.yaml", "list manager git repository")
 
 	return cmd
 }
@@ -41,16 +42,16 @@ func newRepoInitCmd(out io.Writer) *cobra.Command {
 func (r *repoInitOptions) run(out io.Writer, args []string) error {
 	gr, err := os.OpenFile(r.gitRepo, os.O_RDWR|os.O_CREATE, 0644)
 	if gr == nil || err != nil {
-		CmdLogger.Warn(err)
+		cmdLogger.Warn(err)
 	}
 	defer gr.Close()
 
 	fileInfo, err := gr.Stat()
 	if gr == nil || err != nil {
-		CmdLogger.Warn(err)
+		cmdLogger.Warn(err)
 	}
 	if n := fileInfo.Size(); n == 0 {
-		CmdLogger.Info("init default git-repo.yaml")
+		cmdLogger.Info("init default git-repo.yaml")
 		_, _ = gr.WriteString(config.DefaultGitRepo)
 	}
 
@@ -62,37 +63,25 @@ func (r *repoInitOptions) run(out io.Writer, args []string) error {
 func loadConfig(path string) *config.GitRepo {
 	gitRepo := config.GitRepo{}
 	if err := configor.New(&configor.Config{Debug: true}).Load(&gitRepo, path); err != nil {
-		CmdLogger.Error(err)
+		cmdLogger.Error(err)
 	}
 
 	return &gitRepo
 }
 
-// TODO move to utils package
+// TODO move to util package
 func cloneRepo(gitRepos *config.GitRepo) {
 	for _, remote := range gitRepos.Remotes {
-		for _, org := range remote.Organizations {
-			for _, repo := range org.Repos {
-				url := remote.Domain + string(os.PathSeparator) + org.Name + string(os.PathSeparator) + repo.Name + ".git"
-				destPath := config.HomePath() + string(os.PathSeparator) + org.Dir + string(os.PathSeparator) + repo.Name
-
-				if _, err := os.Stat(destPath); os.IsNotExist(err) {
-					config.Path(destPath)
-					CmdLogger.WithFields(log.Fields{
-						"repo": url,
-						"path": destPath,
-					}).Info("cloning repository")
-					_, _ = git.PlainClone(destPath, false, &git.CloneOptions{
-						URL:      url,
-						Progress: os.Stdout,
-					})
-				} else {
-					CmdLogger.WithFields(log.Fields{
-						"repo": url,
-						"path": destPath,
-					}).Info("repository is existing!")
-				}
-			}
+		remoteMap := remote.GetRemoteUrl(gitRepos.Path)
+		for url, path := range *remoteMap {
+			cmdLogger.WithFields(log.Fields{
+				"url":  url,
+				"path": path,
+			}).Info("cloning repository")
+			_, _ = git.PlainClone(path, false, &git.CloneOptions{
+				URL:      url,
+				Progress: os.Stdout,
+			})
 		}
 	}
 }
