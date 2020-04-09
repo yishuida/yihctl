@@ -72,7 +72,7 @@ func loadConfig(path string) *config.GitRepo {
 // TODO move to util package
 func cloneRepo(gitRepos *config.GitRepo) {
 	for _, remote := range gitRepos.Remotes {
-		remoteMap := remote.GetRemoteUrl(gitRepos.Path)
+		remoteMap := remote.GetRemoteUrl("")
 		for url, path := range *remoteMap {
 			cmdLogger.WithFields(log.Fields{
 				"url":  url,

@@ -1,13 +1,18 @@
 package config
 
+const httpUrlTpl = "%s://%s/%s/%s.git"
+const sshUrlTpl = "%s@%s:%s/%s.git"
+
 const DefaultGitRepo = `
 name: git-repo
 version: 0.1.0
 remotes:
-- domain: https://github.com
+- domain: github.com
+  scheme: https
+  dir: project
   organizations:
   - name: yishuida
-    dir: project/yih
+    dir: yih
     repos:
     - name: yihctl
     - name: ficus-virens
@@ -17,13 +22,13 @@ remotes:
     - name: peony
     - name: mihua
   - name: helm
-    dir: project/openSource/helm
+    dir: openSource/helm
     repos:
     - name: helm
     - name: charts
     - name: chartmuseums
   - name: kubernetes
-    dir: project/openSource/k8s
+    dir: openSource/k8s
     repos:
     - name: kubernetes
     - name: kube-controller-manager
@@ -38,14 +43,14 @@ remotes:
     - name: kubectl
     - name: kube-state-metrics
   - name: spring-projects
-    dir: project/openSource/spring
+    dir: openSource/spring
     repos:
     - name: spring-boot
-    - name: spring-framework
+    #- name: spring-framework
     - name: spring-security
     - name: spring-data-jdbc
   - name: choerodon
-    dir: workspace/c7n
+    dir: c7n
     repos:
     - name: javabase
     - name: eureka-server
@@ -58,7 +63,7 @@ remotes:
     - name: oauth-server
     - name: file-service
     - name: choerodon-front
-    - name: devops-service
+    - name: devops-serviceo
     - name: gitlab-service
     - name: workflow-service
     - name: agile-service

@@ -9,21 +9,21 @@ import (
 
 var (
 	settings  = cli.New()
-	CmdLogger = &log.Entry{}
+	cmdLogger = &log.Entry{}
 )
 
 func init() {
-	CmdLogger = myLog.StdLog.WithFields(log.Fields{
+	cmdLogger = myLog.StdLog.WithFields(log.Fields{
 		"pkg": "cmd",
 	})
 }
 
 func debug() {
-	CmdLogger.Level = log.DebugLevel
+	cmdLogger.Level = log.DebugLevel
 }
 
 func main() {
-	CmdLogger.Info("Starting...")
+	cmdLogger.Info("Starting...")
 	cmd := newRootCmd(os.Stdout, os.Args[1:])
 
 	if err := cmd.Execute(); err != nil {

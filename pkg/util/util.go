@@ -1,4 +1,4 @@
-package config
+package util
 
 import (
 	log "github.com/sirupsen/logrus"
@@ -6,11 +6,11 @@ import (
 )
 
 var (
-	ConfLogger = &log.Entry{}
+	utilLogger = &log.Entry{}
 )
 
 func init() {
-	ConfLogger = myLog.StdLog.WithFields(log.Fields{
+	utilLogger = myLog.StdLog.WithFields(log.Fields{
 		"pkg": "config",
 	})
 }
