@@ -1,26 +1,51 @@
 module github.com/yishuida/yihctl
 
-go 1.12
+go 1.14
 
 require (
-	github.com/google/go-cmp v0.4.0 // indirect
+	github.com/Masterminds/goutils v1.1.0 // indirect
+	github.com/Masterminds/semver v1.5.0 // indirect
+	github.com/Masterminds/sprig v2.22.0+incompatible // indirect
+	github.com/ghodss/yaml v1.0.0
+	github.com/huandu/xstrings v1.3.1 // indirect
 	github.com/jinzhu/configor v1.1.1
-	github.com/kr/pretty v0.2.0 // indirect
-	github.com/kr/text v0.2.0 // indirect
+	github.com/jmoiron/sqlx v1.2.0 // indirect
+	github.com/lib/pq v1.3.0 // indirect
+	github.com/mitchellh/copystructure v1.0.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
-	github.com/pelletier/go-buffruneio v0.3.0 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
-	github.com/sergi/go-diff v1.1.0 // indirect
+	github.com/rubenv/sql-migrate v0.0.0-20200402132117-435005d389bc // indirect
 	github.com/sirupsen/logrus v1.4.2
-	github.com/spf13/cobra v0.0.5
-	github.com/spf13/pflag v1.0.3
-	github.com/stretchr/testify v1.5.1 // indirect
-	golang.org/x/crypto v0.0.0-20200311171314-f7b00557c8c4 // indirect
-	golang.org/x/net v0.0.0-20200301022130-244492dfa37a // indirect
-	golang.org/x/sys v0.0.0-20200302150141-5c8b2ff67527 // indirect
-	golang.org/x/tools v0.0.0-20200313205530-4303120df7d8 // indirect
-	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
+	github.com/spf13/cobra v1.0.0
+	github.com/spf13/pflag v1.0.5
 	gopkg.in/src-d/go-git.v4 v4.13.1
-	gopkg.in/yaml.v2 v2.2.8 // indirect
+	k8s.io/apiextensions-apiserver v0.16.5 // indirect
+	k8s.io/apimachinery v0.16.5 // indirect
+	k8s.io/cli-runtime v0.16.5 // indirect
+	k8s.io/client-go v0.16.5
+	k8s.io/helm v2.16.5+incompatible
+	k8s.io/kubernetes v1.16.5 // indirect
+)
+
+replace (
+	k8s.io/api => k8s.io/api v0.16.5
+	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.16.5
+	k8s.io/apimachinery => k8s.io/apimachinery v0.16.5
+	k8s.io/apiserver => k8s.io/apiserver v0.16.5
+	k8s.io/cli-runtime => k8s.io/cli-runtime v0.16.5
+	k8s.io/client-go => k8s.io/client-go v0.16.5
+	k8s.io/cloud-provider => k8s.io/cloud-provider v0.16.5
+	k8s.io/cluster-bootstrap => k8s.io/cluster-bootstrap v0.16.5
+	k8s.io/code-generator => k8s.io/code-generator v0.16.5
+	k8s.io/component-base => k8s.io/component-base v0.16.5
+	k8s.io/cri-api => k8s.io/cri-api v0.16.5
+	k8s.io/csi-translation-lib => k8s.io/csi-translation-lib v0.16.5
+	k8s.io/kube-aggregator => k8s.io/kube-aggregator v0.16.5
+	k8s.io/kube-controller-manager => k8s.io/kube-controller-manager v0.16.5
+	k8s.io/kube-proxy => k8s.io/kube-proxy v0.16.5
+	k8s.io/kube-scheduler => k8s.io/kube-scheduler v0.16.5
+	k8s.io/kubectl => k8s.io/kubectl v0.16.5
+	k8s.io/kubelet => k8s.io/kubelet v0.16.5
+	k8s.io/legacy-cloud-providers => k8s.io/legacy-cloud-providers v0.16.5
+	k8s.io/metrics => k8s.io/metrics v0.16.5
+	k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.16.5
 )

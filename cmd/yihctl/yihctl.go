@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	settings  = cli.New()
-	cmdLogger = &log.Entry{}
+	envSetting = cli.New()
+	cmdLogger  = &log.Entry{}
 )
 
 func init() {
