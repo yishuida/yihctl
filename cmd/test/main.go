@@ -1,37 +1,23 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/base64"
+	"encoding/hex"
 	"fmt"
-	"gopkg.in/yaml.v2"
-	"io/ioutil"
-	"os"
-	"regexp"
-	"text/template"
 )
 
 func main() {
-	testTpl := "Hello {{ test }}!"
-	tpl, _ := template.New("test").Funcs(template.FuncMap{"test": test}).Parse(testTpl)
+	token := "ESyF6HdLzZmT_6xZTLmQ"
+	dbKeyBase := "bf2e47b68d6cafaef1d767e628b619365becf27571e10f196f98dc85e7771042b9203199d39aff91fcb6837c8ed83f2a912b278da50999bb11a2fbc0fba52964"
+	str := fmt.Sprintf("%s%s", token, dbKeyBase[:32])
 
-	tpl.Execute(os.Stdout, tpl)
+	hash := sha256.New()
+	hash.Write([]byte(str))
 
-	in, _ := ioutil.ReadFile("./cmd/test/test.yaml")
-	var test Test
-	yaml.Unmarshal(in, &test)
-	fmt.Println(test)
-}
+	// to lowercase hexits
+	hex.EncodeToString(hash.Sum(nil))
 
-type Test struct {
-	Name string
-	Port int
-}
-
-func CheckMatch(value string, exclude string) bool {
-	r := regexp.MustCompile(exclude)
-	if r.MatchString(value) {
-		//log.Println()
-		return true
-	}
-
-	return false
+	// to base64
+	fmt.Println(base64.StdEncoding.EncodeToString(hash.Sum(nil)))
 }
