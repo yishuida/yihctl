@@ -1,12 +1,12 @@
 package main
 
 import (
+	"github.com/go-git/go-git/v5"
 	"github.com/jinzhu/configor"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/yishuida/yihctl/pkg/config"
 	"github.com/yishuida/yihctl/pkg/util"
-	"gopkg.in/src-d/go-git.v4"
 	"io"
 	"os"
 )

@@ -2,9 +2,9 @@ package config
 
 import (
 	"fmt"
+	"github.com/go-git/go-git/v5/plumbing/transport"
 	log "github.com/sirupsen/logrus"
 	"github.com/yishuida/yihctl/pkg/util"
-	"gopkg.in/src-d/go-git.v4/plumbing/transport"
 	"strings"
 )
 
