@@ -18,16 +18,10 @@ func init() {
 	})
 }
 
-func debug() {
-	cmdLogger.Level = log.DebugLevel
-}
-
 func main() {
-	cmdLogger.Info("Starting...")
 	cmd := newRootCmd(os.Stdout, os.Args[1:])
 
 	if err := cmd.Execute(); err != nil {
-		debug()
 		os.Exit(1)
 	}
 }

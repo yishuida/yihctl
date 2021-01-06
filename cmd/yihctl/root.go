@@ -4,7 +4,7 @@ import (
 	"io"
 )
 
-const rootDesc = `A lnger description that spans multiple lines and likely contains
+const rootDesc = `A longer description that spans multiple lines and likely contains
 examples and usage of using your application. For example:
 
 Cobra is a CLI library for Go that empowers applications.
@@ -23,7 +23,7 @@ func newRootCmd(out io.Writer, args []string) *cobra.Command {
 
 	flags := cmd.PersistentFlags()
 
-	settings.AddFlags(flags)
+	//settings.AddFlags(flags)
 
 	// We can safely ignore any errors that flags.Parse encounters since
 	// those errors will be caught later during the call to cmd.Execution.
@@ -36,6 +36,8 @@ func newRootCmd(out io.Writer, args []string) *cobra.Command {
 		newConfCmd(out),
 		newRepoCmd(out),
 		newHelmCmd(args),
+		newGitlabCmd(args),
+		newVersionCmd(out),
 	)
 
 	return cmd

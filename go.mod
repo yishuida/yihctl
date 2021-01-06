@@ -10,6 +10,7 @@ require (
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/pflag v1.0.5
+	github.com/spf13/viper v1.4.0
 	github.com/stretchr/testify v1.5.1 // indirect
 	k8s.io/api v0.19.5
 	k8s.io/client-go v0.19.5
