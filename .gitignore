@@ -1,5 +1,6 @@
 # custom ignore rule
 *.local.yaml
+_dist/
 
 # Binaries for programs and plugins
 *.exe

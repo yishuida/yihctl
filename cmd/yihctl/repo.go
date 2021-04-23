@@ -2,7 +2,9 @@ package main // import "github.com/yishuida/yihctl/cmd/yihctl"
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/yishuida/yihctl/pkg/action"
 	"io"
+	"os"
 )
 
 const repoDesc = `
@@ -11,16 +13,16 @@ default repository config in $HOME/.yih/git-repo.yaml. you can edit this file wh
 want to change repositories.
 `
 
-func newRepoCmd(out io.Writer) *cobra.Command {
+func newRepoCmd(cfg *action.Configuration, out io.Writer) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "repo [keyword]",
 		Short: "manager git repository in home dir",
 		Long:  repoDesc,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return nil
+		},
 	}
-
-	cmd.AddCommand(newRepoSyncCmd(out))
-	cmd.AddCommand(newRepoInitCmd(out))
-
+	cmd.AddCommand(newRepoInitCmd(os.Stdout))
 	return cmd
 }
