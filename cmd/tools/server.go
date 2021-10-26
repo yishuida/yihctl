@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net"
 	"net/http"
 )
 
@@ -29,6 +31,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8080", nil)
+	// http.HandleFunc("/", handler)
+	// http.ListenAndServe(":8080", nil)
+	addr, err := net.ResolveIPAddr("ip", "www.baidu.com")
+	if err != nil {
+		log.Fatal("Resolvtion error", err)
+	}
+	fmt.Printf("Resolved address is %s\n", addr.String())
 }
+

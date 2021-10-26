@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/go-git/go-git/v5 v5.2.0
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/jinzhu/configor v1.1.1
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/sirupsen/logrus v1.4.2
@@ -11,6 +12,8 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.4.0
 	github.com/stretchr/testify v1.5.1 // indirect
+	google.golang.org/grpc v1.39.0 // indirect
+	google.golang.org/protobuf v1.27.1 // indirect
 	k8s.io/api v0.19.5
 	k8s.io/client-go v0.19.5
 )

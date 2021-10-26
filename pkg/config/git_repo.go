@@ -17,14 +17,14 @@ type GitRepo struct {
 type Remote struct {
 	Domain        string
 	Scheme        string
-	Dir           string
+	Path          string
 	Organizations []Organization
 	Auth          transport.AuthMethod
 }
 
 type Organization struct {
 	Name  string
-	Dir   string
+	Path  string
 	Repos []Repo
 }
 
@@ -46,7 +46,7 @@ func (r *Remote) GetRemoteUrl(gitPath string) *map[string]string {
 			for _, repo := range org.Repos {
 				url := fmt.Sprintf(getTpl(r.Scheme), r.Scheme, r.Domain, org.Name, repo.Name)
 
-				destPath := util.Path(gitHome, r.Dir, org.Dir, repo.Name)
+				destPath := util.Path(gitHome, r.Path, org.Path, repo.Name)
 				ConfLogger.WithFields(log.Fields{
 					"repo": url,
 					"path": destPath,

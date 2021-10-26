@@ -1,14 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 	"github.com/jinzhu/configor"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/yishuida/yihctl/pkg/config"
-	"github.com/yishuida/yihctl/pkg/util"
+	mygit "github.com/yishuida/yihctl/pkg/git"
 	"io"
 	"os"
 )
@@ -70,51 +66,13 @@ func loadConfig(path string) *config.GitRepo {
 	return &gitRepo
 }
 
-// TODO move to util package
 func cloneRepo(gitRepos *config.GitRepo) {
 	for _, remote := range gitRepos.Remotes {
 		remoteMap := remote.GetRemoteUrl("")
 		for url, path := range *remoteMap {
-			if util.EmptyDir(path) {
-				cmdLogger.WithFields(log.Fields{
-					"url":  url,
-					"path": path,
-				}).Info("cloning repository")
-
-				var err error
-				if remote.Scheme == "git" {
-					publicKeys, err := ssh.NewPublicKeysFromFile("git", "/Users/vista/.ssh/id_rsa", "")
-					if err != nil {
-						cmdLogger.Warn(err)
-					}
-					_, err = git.PlainClone(path, false, &git.CloneOptions{
-						Auth:     publicKeys,
-						URL:      url,
-						Progress: os.Stdout,
-					})
-					CheckIfError(err)
-
-				} else {
-					_, err = git.PlainClone(path, false, &git.CloneOptions{
-						URL:      url,
-						Progress: os.Stdout,
-					})
-				}
-
-				CheckIfError(err)
-			} else {
-				cmdLogger.WithFields(log.Fields{"url": url, "path": path}).Info("Spik up git clone")
+			if err := mygit.CloneOrPull(url,path); err != nil {
+				cmdLogger.Errorf("git or clone repo failed: %s", err)
 			}
 		}
 	}
-}
-
-// CheckIfError should be used to naively panics if an error is not nil.
-func CheckIfError(err error) {
-	if err == nil {
-		return
-	}
-
-	fmt.Printf("\x1b[31;1m%s\x1b[0m\n", fmt.Sprintf("error: %s", err))
-	//os.Exit(1)
 }
