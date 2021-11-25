@@ -1,78 +1,68 @@
 package main
 
 import (
-	"github.com/jinzhu/configor"
+	"errors"
+	"fmt"
+	"github.com/go-git/go-git/v5"
 	"github.com/spf13/cobra"
-	"github.com/yishuida/yihctl/pkg/config"
-	mygit "github.com/yishuida/yihctl/pkg/git"
 	"io"
-	"os"
+	"strings"
+	"ydq.io/yihctl/pkg/config"
+	gitydq "ydq.io/yihctl/pkg/git"
+	"ydq.io/yihctl/pkg/util"
 )
 
 const repoInitDesc = `
-Init config file in $HOME/.yih/git-repo.yaml, this default config will clone repository in
-helm, kubernetes, choerodon, yishuida organization,
+Init configuration file in ./config.yaml, this default configuration fil will clone repository
+github、gitlab、gitee repository.
 `
 
-type repoInitOptions struct {
-	gitRepo string
-	// TODO add auth
-}
-
-func newRepoInitCmd(out io.Writer) *cobra.Command {
-	r := &repoInitOptions{}
-
+func newRepoInitCmd(out io.Writer, r repoOptions) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "init [keyword]",
-		Short: "initialization config and default repository",
+		Short: "initialization cfgFile and default repository",
 		Long:  repoInitDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return r.run(out, args)
+			return gitInitRun(out, r)
 		},
 	}
-
-	f := cmd.Flags()
-	f.StringVar(&r.gitRepo, "git-repo", "", "list manager git repository")
 
 	return cmd
 }
 
-func (r *repoInitOptions) run(out io.Writer, args []string) error {
-	gr, err := os.OpenFile(r.gitRepo, os.O_RDWR|os.O_CREATE, 0644)
-	if gr == nil || err != nil {
-		cmdLogger.Warn(err)
+func gitInitRun(out io.Writer, r repoOptions) error {
+	grc := readConfigFile(r.cfgFile)
+	if grc == nil {
+		return errors.New("config is empty")
 	}
-	defer gr.Close()
+	for _, repo := range grc.Repositories {
+		remote := grc.GetRemote(repo.From)
 
-	fileInfo, err := gr.Stat()
-	if gr == nil || err != nil {
-		cmdLogger.Warn(err)
-	}
-	if n := fileInfo.Size(); n == 0 {
-		cmdLogger.Warn("git-repo.yaml is empty!")
-	}
+		for _, r := range repo.Repos {
+			gitRepoUrl := config.GetGitRepoUrl(remote, r.Source)
+			targetPath := fmt.Sprintf("%s/%s", repo.Path, strings.Split(r.Source, "/")[1])
 
-	cloneRepo(loadConfig(r.gitRepo))
+			if isLocalRepositoryExist(targetPath) {
+				cmdLogger.Warnf("git repository in %s existing", targetPath)
+				break
+			} else {
+				util.Path(targetPath)
+			}
+
+			cmdLogger.Infof("git repository gitRepoUrl is %s, clone into %s", gitRepoUrl, targetPath)
+			return gitydq.Clone(out, remote.Auth.GenerateAuth(), gitRepoUrl, targetPath)
+		}
+	}
 
 	return nil
 }
 
-func loadConfig(path string) *config.GitRepo {
-	gitRepo := config.GitRepo{}
-	if err := configor.New(&configor.Config{}).Load(&gitRepo, path); err != nil {
-		cmdLogger.Error(err)
+func isLocalRepositoryExist(path string) bool {
+	// We instantiate a new repository targeting the given path (the .git folder)
+	r, err := git.PlainOpen(path)
+	if err != nil || r == nil {
+		cmdLogger.Warningf("go-git open %s failed", path)
+		return false
 	}
-
-	return &gitRepo
-}
-
-func cloneRepo(gitRepos *config.GitRepo) {
-	for _, remote := range gitRepos.Remotes {
-		remoteMap := remote.GetRemoteUrl("")
-		for url, path := range *remoteMap {
-			if err := mygit.CloneOrPull(url,path); err != nil {
-				cmdLogger.Errorf("git or clone repo failed: %s", err)
-			}
-		}
-	}
+	return true
 }

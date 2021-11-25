@@ -1,7 +1,6 @@
-package main // import "github.com/yishuida/yihctl/cmd/yihctl"
+package main // import "ydq.io/yihctl/cmd/yihctl"
 import (
 	"github.com/spf13/cobra"
-	"github.com/yishuida/yihctl/pkg/action"
 	"io"
 )
 
@@ -12,7 +11,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`
 
-func newRootCmd(cfg *action.Configuration, out io.Writer, args []string) *cobra.Command {
+func newRootCmd(out io.Writer, args []string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "yihctl",
 		Short: "A sample command tool line",
@@ -34,10 +33,7 @@ func newRootCmd(cfg *action.Configuration, out io.Writer, args []string) *cobra.
 	_ = flags.Parse(args)
 
 	cmd.AddCommand(
-		newConfCmd(out),
-		newRepoCmd(cfg, out),
-		newHelmCmd(args),
-		newGitlabCmd(args),
+		newRepoCmd(out),
 		newVersionCmd(out),
 	)
 

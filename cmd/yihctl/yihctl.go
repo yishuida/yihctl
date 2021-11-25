@@ -1,17 +1,14 @@
-package main // import "github.com/yishuida/yihctl/cmd/yihctl"
+package main // import "ydq.io/yihctl/cmd/yihctl"
 
 import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"github.com/yishuida/yihctl/pkg/action"
-	"github.com/yishuida/yihctl/pkg/cli"
-	myLog "github.com/yishuida/yihctl/pkg/log"
 	"os"
+	myLog "ydq.io/yihctl/pkg/log"
 )
 
 var (
-	envSetting = cli.New()
-	cmdLogger  = &log.Entry{}
+	cmdLogger = &log.Entry{}
 )
 
 func init() {
@@ -21,14 +18,13 @@ func init() {
 }
 
 func main() {
-	actionConfig := new(action.Configuration)
-
-	cmd := newRootCmd(actionConfig, os.Stdout, os.Args[1:])
+	cmd := newRootCmd(os.Stdout, os.Args[1:])
 
 	cobra.OnInitialize(func() {
-		actionConfig.Init()
+		//actionConfig.Init()
 	})
 	if err := cmd.Execute(); err != nil {
+		cmdLogger.Error(err)
 		os.Exit(1)
 	}
 }

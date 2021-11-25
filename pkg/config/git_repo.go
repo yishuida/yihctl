@@ -3,68 +3,95 @@ package config
 import (
 	"fmt"
 	"github.com/go-git/go-git/v5/plumbing/transport"
-	log "github.com/sirupsen/logrus"
-	"github.com/yishuida/yihctl/pkg/util"
-	"strings"
+	"github.com/go-git/go-git/v5/plumbing/transport/http"
+	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
+	ssh2 "golang.org/x/crypto/ssh"
+	"os"
 )
 
-type GitRepo struct {
-	Name    string
-	Version string
-	Remotes []Remote
+type GitRepoConfig struct {
+	Name         string
+	Version      string
+	Remotes      map[string]Remote
+	Repositories []Repository
 }
 
 type Remote struct {
-	Domain        string
-	Scheme        string
-	Path          string
-	Organizations []Organization
-	Auth          transport.AuthMethod
-}
-
-type Organization struct {
-	Name  string
-	Path  string
-	Repos []Repo
-}
-
-type Repo struct {
 	Name   string
-	Branch string `default:"origin"`
+	Domain string
+	Scheme string
+	Type   string
+	Auth   Auth `yaml:"auth"`
 }
 
-func (r *Remote) GetRemoteUrl(gitPath string) *map[string]string {
-	var remoteMap = map[string]string{}
+type Auth struct {
+	Username       string `yaml:"username"`
+	Password       string `yaml:"password"`
+	PrivateKeyFile string `yaml:"privateKeyFile"`
+}
 
-	gitHome := util.HomePath()
-	if gitPath != "" {
-		gitHome = gitPath
+type Repository struct {
+	Name        string
+	Description string
+	From        string
+	To          string
+	Path        string
+	Repos       []struct {
+		Source string
+		Target string
 	}
+}
 
-	for _, org := range r.Organizations {
-		if org.Repos != nil {
-			for _, repo := range org.Repos {
-				url := fmt.Sprintf(getTpl(r.Scheme), r.Scheme, r.Domain, org.Name, repo.Name)
+func GetGitRepoUrl(remote Remote, repo string) string {
 
-				destPath := util.Path(gitHome, r.Path, org.Path, repo.Name)
-				ConfLogger.WithFields(log.Fields{
-					"repo": url,
-					"path": destPath,
-				}).Info("Add repository to clone list")
+	return renderUrl(remote, repo)
+}
 
-				remoteMap[url] = destPath
-			}
+func (g *GitRepoConfig) GetRemote(name string) Remote {
+	return g.Remotes[name]
+}
+
+func (a *Auth) GenerateAuth() transport.AuthMethod {
+	if a.Username != "" && a.Password != "" {
+		return &http.BasicAuth{
+			Username: a.Username,
+			Password: a.Password,
 		}
 	}
+	if a.PrivateKeyFile != "" {
 
-	return &remoteMap
+		_, err := os.Stat(a.PrivateKeyFile)
+		if err != nil {
+			ConfLogger.Warningf("read file %s failed %s\n", a.PrivateKeyFile, err.Error())
+			return nil
+		}
+
+		// Clone the given repository to the given directory
+		publicKeys, err := ssh.NewPublicKeysFromFile("git", a.PrivateKeyFile, "")
+		if err != nil {
+			ConfLogger.Warningf("generate publickeys failed: %s\n", err.Error())
+			return nil
+		}
+		publicKeys.HostKeyCallback = ssh2.InsecureIgnoreHostKey()
+
+		return publicKeys
+	}
+	return nil
+}
+
+func renderUrl(remote Remote, repo string) string {
+	tpl := getTpl(remote.Scheme)
+	return fmt.Sprintf(tpl, remote.Domain, repo)
 }
 
 func getTpl(scheme string) string {
-	if strings.ToLower(scheme) == "https" || strings.ToLower(scheme) == "http" {
+	switch scheme {
+	case "http":
 		return httpUrlTpl
-	} else if strings.ToLower(scheme) == "git" {
+	// case "https": return httpsUrlTpl
+	case "ssh":
 		return sshUrlTpl
+	default:
+		return httpsUrlTpl
 	}
-	return ""
 }

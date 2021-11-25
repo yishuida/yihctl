@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/yishuida/yihctl/internal/version"
 	"io"
 	"text/template"
+	"ydq.io/yihctl/internal/version"
 )
 
 const versionDesc = `

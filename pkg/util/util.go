@@ -2,7 +2,7 @@ package util
 
 import (
 	log "github.com/sirupsen/logrus"
-	myLog "github.com/yishuida/yihctl/pkg/log"
+	myLog "ydq.io/yihctl/pkg/log"
 )
 
 var (
