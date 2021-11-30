@@ -32,11 +32,8 @@ func newRepoCmd(out io.Writer) *cobra.Command {
 		},
 	}
 
-	f := cmd.Flags()
-	f.StringVarP(&r.cfgFile, "config", "c", "config.yaml", "manager git repository")
-
 	cmd.AddCommand(newRepoInitCmd(out, r))
-	cmd.AddCommand(newRepoSyncCmd(out))
+	cmd.AddCommand(newRepoSyncCmd(out, r))
 
 	return cmd
 }

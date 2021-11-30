@@ -22,7 +22,7 @@ func newRepoSyncCmd(out io.Writer, r repoOptions) *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVar(&r.cfgFile, "config", "config.yaml", "manager git repository")
+	f.StringVarP(&r.cfgFile, "config", "v", "config.yaml", "manager git repository")
 
 	return cmd
 }

@@ -15,6 +15,11 @@ remotes:
     auth:
       #privateKeyFile: /Users/vista/project/vista/yihctl/example/id_rsa
       privateKeyFile: /Users/vista/.ssh/id_rsa
+  github-proxy:
+    name: gh-proxy
+    domain: github.com.cnpmjs.org
+    scheme: https
+    type: github
   gitee:
     name: origin
     domain: gitee.com
@@ -29,6 +34,7 @@ remotes:
     name: vista
     domain: code.ydq.io
     scheme: https
+    sslMode:
     type: gitea
     auth:
       username: vista

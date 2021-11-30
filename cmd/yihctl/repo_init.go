@@ -27,6 +27,9 @@ func newRepoInitCmd(out io.Writer, r repoOptions) *cobra.Command {
 		},
 	}
 
+	f := cmd.Flags()
+	f.StringVarP(&r.cfgFile, "config", "c", "config.yaml", "manager git repository")
+
 	return cmd
 }
 
@@ -43,14 +46,15 @@ func gitInitRun(out io.Writer, r repoOptions) error {
 			targetPath := fmt.Sprintf("%s/%s", repo.Path, strings.Split(r.Source, "/")[1])
 
 			if isLocalRepositoryExist(targetPath) {
-				cmdLogger.Warnf("git repository in %s existing", targetPath)
-				break
+				cmdLogger.Infof("git repository in %s existing", targetPath)
 			} else {
 				util.Path(targetPath)
+				cmdLogger.Infof("git repository gitRepoUrl is %s, clone into %s", gitRepoUrl, targetPath)
+				err := gitydq.Clone(out, remote.Auth.GenerateAuth(), gitRepoUrl, targetPath)
+				if err != nil {
+					return err
+				}
 			}
-
-			cmdLogger.Infof("git repository gitRepoUrl is %s, clone into %s", gitRepoUrl, targetPath)
-			return gitydq.Clone(out, remote.Auth.GenerateAuth(), gitRepoUrl, targetPath)
 		}
 	}
 

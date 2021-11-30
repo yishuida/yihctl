@@ -17,11 +17,12 @@ type GitRepoConfig struct {
 }
 
 type Remote struct {
-	Name   string
-	Domain string
-	Scheme string
-	Type   string
-	Auth   Auth `yaml:"auth"`
+	Name    string
+	Domain  string
+	Scheme  string
+	Type    string
+	SslMode bool
+	Auth    Auth `yaml:"auth"`
 }
 
 type Auth struct {
